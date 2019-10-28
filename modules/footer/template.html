@@ -1,0 +1,10 @@
+<% _.each(urls, function(value, key){ %>
+    <div class="hidden-xs pull-left"> <%=value.bezeichnung %> <a href=<%=value.url %> target="_blank"><%=value.alias %></a></div>
+    <div class="visible-xs pull-left"> <%=value.bezeichnung %> <a href=<%=value.url %> target="_blank"><%=value.alias_mobil %></a></div>
+    <span class="glyphicon glyphicon-option-vertical pull-left hidden-xs"></span>
+<%}); %>
+
+<% if (showVersion) { %>
+    <div class="hidden-xs pull-left"> Version: <%=masterPortalVersionNumber %></div>
+    <span class="glyphicon glyphicon-option-vertical pull-left hidden-xs"></span>
+<% } %>

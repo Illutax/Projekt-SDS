@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<div class="legend-win-header">
+    <p class="buttons pull-right">
+        <span class="glyphicon glyphicon-remove" title="Schließen"></span>
+    </p>
+    <p class="buttons pull-left">
+        <span class="glyphicon glyphicon-book win-icon"></span>
+    </p>
+    <p class="title">
+        <span>Legende</span>
+    </p>
+</div>
+
+<div class="legend-win-content">
+    <div class="panel-group" role="tablist" aria-multiselectable="true">
+    <% _.each(legendParams, function(element, index) { %>
+        <div class="panel panel-default">
+            <div class="panel-heading legend-heading" role="tab" id="überschriftEins<%=index%>" data-toggle="collapse" href="#collapseEins<%=index%>" aria-expanded="true" aria-controls"collapseEins<%=index%>">
+                <h4 class="panel-title legend-title">
+                    <%= element.layername %>
+                </h4>
+            </div>
+            <% _.each(element.legend, function (layerdefinition) { %>
+            <div id="collapseEins<%=index%>" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="überschriftEins<%=index%>">
+                <div class="panel-body panel-legend">
+                    <%= layerdefinition.html %>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+
+    <% }); %>
+    </div>
+</div>

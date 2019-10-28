@@ -1,0 +1,8 @@
+node_modules/
+dist/
+portalconfigs/
+scripte/
+jsdoc/
+lib/
+test/end2end/
+examples/
