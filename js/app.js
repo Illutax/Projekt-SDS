@@ -79,8 +79,6 @@ import Orientation3DView from "../modules/controls/orientation3d/view";
 import BackForwardView from "../modules/controls/backforward/view";
 import "es6-promise/auto";
 import VirtualcityModel from "../modules/tools/virtualcity/model";
-// View importieren
-import ScaleView from "../modules/tools/scale/view";
 
 var sbconfig, controls, controlsView;
 
@@ -302,11 +300,6 @@ function loadApp () {
                 new VirtualcityModel(tool.attributes);
                 break;
             }
-            // View initialsieren
-            case "scale": {
-                new ScaleView({model: tool});
-                break;
-              }
             default: {
                 break;
             }
