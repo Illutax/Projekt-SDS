@@ -47,6 +47,8 @@ import LayerSliderModel from "../../tools/layerslider/model";
 import GFI from "../../tools/gfi/model";
 import Viewpoint from "./viewpoint/model";
 import VirtualCityModel from "../../tools/virtualcity/model";
+import ScaleModel from "../../tools/scale/model";
+
 
 const ModelList = Backbone.Collection.extend(/** @lends ModelList.prototype */{
     /**
@@ -327,6 +329,9 @@ const ModelList = Backbone.Collection.extend(/** @lends ModelList.prototype */{
         }
         else if (attrs.type === "viewpoint") {
             return new Viewpoint(attrs, options);
+        }
+        else if (attrs.id === "scale") {
+            return new ScaleModel(attrs, options);
         }
         else {
             Radio.trigger("Alert", "alert", "unbekannter LayerTyp " + attrs.type + ". Bitte wenden Sie sich an einen Administrator!");

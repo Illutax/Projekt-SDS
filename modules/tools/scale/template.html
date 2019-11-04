@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<select class="form-control input-sm scale-switcher d-inline">
+  <% _.each(scales, function (scale) { %>
+    <% if (scale === currentScale) { %>
+        <option selected><%= scale %></option>
+    <% }
+    else { %>
+        <option><%= scale %></option>
+    <% } %>
+  <% }); %>
+</select>
