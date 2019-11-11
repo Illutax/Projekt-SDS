@@ -43,7 +43,7 @@ import CompareFeatures from "../../tools/compareFeatures/model";
 import Einwohnerabfrage_HH from "../../tools/einwohnerabfrage_hh/model";
 import ParcelSearch from "../../tools/parcelSearch/model";
 import StyleWMS from "../../tools/styleWMS/model";
-import LayerSliderModel from "../../tools/layerSlider/model";
+import LayerSliderModel from "../../tools/layerslider/model";
 import GFI from "../../tools/gfi/model";
 import Viewpoint from "./viewpoint/model";
 import VirtualCityModel from "../../tools/virtualcity/model";
@@ -312,6 +312,7 @@ const ModelList = Backbone.Collection.extend(/** @lends ModelList.prototype */{
              * layerslider
              * @deprecated in 3.0.0
              */
+             
             else if (attrs.id === "layerslider") {
                 console.warn("Tool: 'layerslider' is deprecated. Please use 'layerSlider' instead.");
                 return new LayerSliderModel(attrs, options);
