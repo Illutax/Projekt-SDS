@@ -43,11 +43,10 @@ import CompareFeatures from "../../tools/compareFeatures/model";
 import Einwohnerabfrage_HH from "../../tools/einwohnerabfrage_hh/model";
 import ParcelSearch from "../../tools/parcelSearch/model";
 import StyleWMS from "../../tools/styleWMS/model";
-import LayerSliderModel from "../../tools/layerslider/model";
+import LayerSliderModel from "../../tools/layerSlider/model";
 import GFI from "../../tools/gfi/model";
 import Viewpoint from "./viewpoint/model";
 import VirtualCityModel from "../../tools/virtualcity/model";
-
 
 const ModelList = Backbone.Collection.extend(/** @lends ModelList.prototype */{
     /**
@@ -55,7 +54,7 @@ const ModelList = Backbone.Collection.extend(/** @lends ModelList.prototype */{
      * @description Collection that manages all models.
      * Models can be of type folder, layer, staticlink, tool, viewpoint, ...
      * @extends Backbone.Collection
-     * @memberOf Core.ModelList
+     * @memberof Core.ModelList
      * @constructs
      * @listens ModelList#RadioRequestModelListGetCollection
      * @listens ModelList#RadioRequestModelListGetModelsByAttributes
@@ -66,7 +65,7 @@ const ModelList = Backbone.Collection.extend(/** @lends ModelList.prototype */{
      * @listens ModelList#RadioTriggerModelListShowFeaturesById
      * @listens ModelList#RadioTriggerModelListRemoveModelsByParentId
      * @listens ModelList#RadioTriggerModelListRemoveModelsById
-     * @listens ModelList#RadioTriggerModelListAddInitialyNeededModels
+     * @listens ModelList#RadioTriggerModelListAddInitiallyNeededModels
      * @listens ModelList#RadioTriggerModelListAddModelsByAttributes
      * @listens ModelList#RadioTriggerModelListSetIsSelectedOnChildLayers
      * @listens ModelList#RadioTriggerModelListSetIsSelectedOnParent
@@ -75,6 +74,7 @@ const ModelList = Backbone.Collection.extend(/** @lends ModelList.prototype */{
      * @listens ModelList#RadioTriggerModelListSetAllDescendantsInvisible
      * @listens ModelList#RadioTriggerModelListRenderTree
      * @listens ModelList#RadioTriggerModelListToggleDefaultTool
+     * @listens ModelList#RadioTriggerModelListReplaceModelById
      * @listens ModelList#ChangeIsVisibleInMap
      * @listens ModelList#ChangeIsExpanded
      * @listens ModelList#ChangeIsSelected
@@ -110,8 +110,9 @@ const ModelList = Backbone.Collection.extend(/** @lends ModelList.prototype */{
             "showFeaturesById": this.showFeaturesById,
             "removeModelsByParentId": this.removeModelsByParentId,
             "removeModelsById": this.removeModelsById,
+            "replaceModelById": this.replaceModelById,
             // Initial sichtbare Layer etc.
-            "addInitialyNeededModels": this.addInitialyNeededModels,
+            "addInitiallyNeededModels": this.addInitiallyNeededModels,
             "addModelsByAttributes": this.addModelsByAttributes,
             "addModel": this.addModel,
             "setIsSelectedOnChildLayers": this.setIsSelectedOnChildLayers,
@@ -725,7 +726,7 @@ const ModelList = Backbone.Collection.extend(/** @lends ModelList.prototype */{
      * @fires Parser#RadioRequestParserGetItemByAttributes
      * @return {void}
      */
-    addInitialyNeededModels: function () {
+    addInitiallyNeededModels: function () {
         // lighttree: Alle models gleich hinzufügen, weil es nicht viele sind und sie direkt einen Selection index
         // benötigen, der ihre Reihenfolge in der Config Json entspricht und nicht der Reihenfolge
         // wie sie hinzugefügt werden
@@ -739,7 +740,16 @@ const ModelList = Backbone.Collection.extend(/** @lends ModelList.prototype */{
             lightModels = Radio.request("Parser", "getItemsByAttributes", {type: "layer"});
             lightModels = this.mergeParamsToLightModels(lightModels, paramLayers);
 
-            this.add(lightModels);
+            lightModels.forEach(model => {
+                if (model.hasOwnProperty("children")) {
+                    if (model.children.length > 0) {
+                        this.add(model);
+                    }
+                }
+                else {
+                    this.add(model);
+                }
+            });
         }
         else if (paramLayers.length > 0) {
             itemIsVisibleInMap = Radio.request("Parser", "getItemsByAttributes", {isVisibleInMap: true});
@@ -830,7 +840,7 @@ const ModelList = Backbone.Collection.extend(/** @lends ModelList.prototype */{
     addModelsByAttributes: function (attrs) {
         var lightModels = Radio.request("Parser", "getItemsByAttributes", attrs);
 
-        this.add(lightModels);
+        lightModels.forEach(model => this.add(model));
         this.updateLayerView();
     },
 
@@ -945,6 +955,21 @@ const ModelList = Backbone.Collection.extend(/** @lends ModelList.prototype */{
         }, this);
     },
 
+    /**
+    * replaces a model by a given id
+    * @param  {String} id from model that be replaced in ModelList
+    * @param  {Object} newModel to add to the ModelList
+    * @return {void}
+    */
+    replaceModelById: function (id, newModel) {
+        var model = this.get(id);
+
+        if (model) {
+            this.remove(model);
+            this.add(newModel);
+            this.updateLayerView();
+        }
+    },
     /**
     * remove a model by a given id
     * @param  {String} id from model that be remove from ModelList

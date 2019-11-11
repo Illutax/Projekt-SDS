@@ -3,10 +3,8 @@ import RestReaderList from "../modules/restReader/collection";
 import Autostarter from "../modules/core/autostarter";
 import Util from "../modules/core/util";
 import StyleList from "../modules/vectorStyle/list";
-import RawLayerList from "../modules/core/rawLayerList";
 import Preparser from "../modules/core/configLoader/preparser";
 import ParametricURL from "../modules/core/parametricURL";
-import CRS from "../modules/core/crs";
 import Map from "../modules/core/map";
 import AddGeoJSON from "../modules/tools/addGeoJSON/model";
 import WPS from "../modules/core/wps";
@@ -24,7 +22,6 @@ import LayerinformationModel from "../modules/layerinformation/model";
 import FooterView from "../modules/footer/view";
 import ClickCounterModel from "../modules/ClickCounter/model";
 import MouseHoverPopupView from "../modules/mouseHover/view";
-import QuickHelpView from "../modules/quickHelp/view";
 import ScaleLineView from "../modules/scaleline/view";
 import WindowView from "../modules/window/view";
 import SidebarView from "../modules/sidebar/view";
@@ -40,7 +37,7 @@ import AnimationView from "../modules/tools/pendler/animation/view";
 import FilterView from "../modules/tools/filter/view";
 import SaveSelectionView from "../modules/tools/saveSelection/view";
 import StyleWMSView from "../modules/tools/styleWMS/view";
-import LayerSliderView from "../modules/tools/layerslider/view";
+import LayerSliderView from "../modules/tools/layerSlider/view";
 import CompareFeaturesView from "../modules/tools/compareFeatures/view";
 import EinwohnerabfrageView from "../modules/tools/einwohnerabfrage_hh/selectView";
 import ImportView from "../modules/tools/kmlimport/view";
@@ -72,7 +69,7 @@ import FreezeModel from "../modules/controls/freeze/model";
 import MapMarkerView from "../modules/mapMarker/view";
 import SearchbarView from "../modules/searchbar/view";
 import TitleView from "../modules/title/view";
-import HighlightFeature from "../modules/highlightfeature/model";
+import HighlightFeature from "../modules/highlightFeature/model";
 import Button3DView from "../modules/controls/button3d/view";
 import ButtonObliqueView from "../modules/controls/buttonoblique/view";
 import Orientation3DView from "../modules/controls/orientation3d/view";
@@ -109,22 +106,16 @@ function loadApp () {
         new RemoteInterface(Config.remoteInterface);
     }
 
-    if (_.has(Config, "quickHelp")) {
-        new QuickHelpView(Config.quickHelp);
-    }
-
     // Core laden
     new Alert(alertingConfig);
     new Autostarter();
     new Util(utilConfig);
     // Pass null to create an empty Collection with options
     new RestReaderList(null, {url: Config.restConf});
-    new RawLayerList(null, {url: Config.layerConf});
     new Preparser(null, {url: Config.portalConf});
     new StyleList();
     new ParametricURL();
-    new CRS();
-    new Map();
+    new Map(Radio.request("Parser", "getPortalConfig").mapView);
     new WPS();
     new AddGeoJSON();
 
@@ -443,7 +434,6 @@ function loadApp () {
 
     new MapMarkerView();
 
-    sbconfig = _.extend({}, _.has(Config, "quickHelp") ? {quickHelp: Config.quickHelp} : {});
     sbconfig = _.extend(sbconfig, Radio.request("Parser", "getItemsByAttributes", {type: "searchBar"})[0].attr);
     if (sbconfig) {
         new SearchbarView(sbconfig);
@@ -461,7 +451,10 @@ function loadApp () {
         import(/* webpackMode: "eager" */CUSTOMMODULE)
             .then(module => {
                 /* eslint-disable new-cap */
-                new module.default();
+                const customModule = new module.default();
+                // custommodules are initialized with 'new Tool(attrs, options);', that produces a rudimental model. Later on the model must be replaced in modellist:
+
+                Radio.trigger("ModelList", "replaceModelById", customModule.model.id, customModule.model);
             })
             .catch(error => {
                 console.error(error);

@@ -417,6 +417,7 @@ const DrawTool = Tool.extend({
 
         drawInteraction.on("drawend", function (evt) {
             evt.feature.set("styleId", _.uniqueId());
+            evt.stopPropagation();
         });
 
         if (maxFeatures && maxFeatures > 0) {
