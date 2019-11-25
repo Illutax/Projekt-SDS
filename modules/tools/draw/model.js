@@ -29,7 +29,8 @@ const DrawTool = Tool.extend({
         deactivateGFI: true,
         glyphicon: "glyphicon-pencil",
         addFeatureListener: {},
-        zIndex: 0
+        zIndex: 0,
+        freehand: true
     }),
 
     /**
@@ -402,7 +403,8 @@ const DrawTool = Tool.extend({
         return new Draw({
             source: layer.getSource(),
             type: drawType.geometry,
-            style: this.getStyle()
+            style: this.getStyle(),
+            freehand: this.getFreehand()
         });
     },
 
@@ -494,6 +496,14 @@ const DrawTool = Tool.extend({
     },
 
     /**
+     * Returns the boolean value for whether the lines should be drawn smooth or not
+     * @return {boolean} smooth or naw
+     */
+    getFreehand: function () {
+        return this.get("freehand");
+    },
+
+    /**
      * Creates and returns a feature style for points, lines, or faces and returns it
      * @param {number} color - of drawings
      * @param {string} drawGeometryType - geometry type of drawings
@@ -538,6 +548,7 @@ const DrawTool = Tool.extend({
         this.setRadius(this.defaults.radius);
         this.setOpacity(this.defaults.opacity);
         this.setColor(defaultColor);
+        this.setFreehand(this.default.freehand);
 
         this.setDrawType(this.defaults.drawType.geometry, this.defaults.drawType.text);
     },
@@ -758,6 +769,15 @@ const DrawTool = Tool.extend({
      */
     setColor: function (value) {
         this.set("color", value);
+    },
+
+    /**
+     * setter for freehand
+     * @param {boolean} value - smooth or naw
+     * @return {void}
+     */
+    setFreehand: function (value) {
+        this.set("freehand", value);
     },
 
     /**

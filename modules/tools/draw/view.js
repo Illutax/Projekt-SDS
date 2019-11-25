@@ -11,6 +11,7 @@ const DrawToolView = Backbone.View.extend({
         "change .stroke-width select": "setStrokeWidth",
         "change .opacity select": "setOpacity",
         "change .color select": "setColor",
+        "change .freehand input": "setFreehand",
         "click .delete": "deleteFeatures",
         "click .draw": "toggleInteraction",
         "click .modify": "toggleInteraction",
@@ -101,6 +102,7 @@ const DrawToolView = Backbone.View.extend({
                 this.$el.find(".font").hide();
                 this.$el.find(".radius").show();
                 this.$el.find(".stroke-width").hide();
+                this.$el.find(".freehand").hide();
                 break;
             }
             case "Text schreiben": {
@@ -109,6 +111,7 @@ const DrawToolView = Backbone.View.extend({
                 this.$el.find(".font").show();
                 this.$el.find(".radius").hide();
                 this.$el.find(".stroke-width").hide();
+                this.$el.find(".freehand").hide();
                 break;
             }
             default: {
@@ -117,6 +120,7 @@ const DrawToolView = Backbone.View.extend({
                 this.$el.find(".font").hide();
                 this.$el.find(".radius").hide();
                 this.$el.find(".stroke-width").show();
+                this.$el.find(".freehand").show();
                 break;
             }
         }
@@ -298,6 +302,16 @@ const DrawToolView = Backbone.View.extend({
         newColor[3] = parseFloat(evt.target.value);
         this.model.setColor(newColor);
         this.model.setOpacity(parseFloat(evt.target.value));
+        this.model.updateDrawInteraction();
+    },
+
+    /**
+     * setter for freehand drawing lines
+     * @param {event} evt - with the boolean determines whether the lines should be smoothed or not
+     * @return {void}
+     */
+    setFreehand: function (evt) {
+        this.model.setFreehand(evt.currentTarget.checked);
         this.model.updateDrawInteraction();
     }
 });
