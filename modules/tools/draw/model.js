@@ -548,7 +548,7 @@ const DrawTool = Tool.extend({
         this.setRadius(this.defaults.radius);
         this.setOpacity(this.defaults.opacity);
         this.setColor(defaultColor);
-        this.setFreehand(this.default.freehand);
+        this.setFreehand(true);
 
         this.setDrawType(this.defaults.drawType.geometry, this.defaults.drawType.text);
     },
