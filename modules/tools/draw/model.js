@@ -734,6 +734,18 @@ const DrawTool = Tool.extend({
             }});
     },
 
+    /*
+     * Deletes the last element in the feature array in "layer"
+     * @returns {void}
+     */
+    undoLastStep: function () {
+    var features = this.get("layer").getSource().getFeatures();
+    var featureToRemove = features[features.length-1];
+        if(features.length > 0) {
+            this.get("layer").getSource().removeFeature(featureToRemove)
+        }
+    },
+
     /**
      * setter for drawType
      * @param {string} value1 - geometry

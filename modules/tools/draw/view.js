@@ -15,7 +15,8 @@ const DrawToolView = Backbone.View.extend({
         "click .draw": "toggleInteraction",
         "click .modify": "toggleInteraction",
         "click .trash": "toggleInteraction",
-        "click .downloadDrawing": "startDownloadTool"
+        "click .downloadDrawing": "startDownloadTool",
+        "click .undo": "undoLastStep"
     },
 
     /**
@@ -223,6 +224,14 @@ const DrawToolView = Backbone.View.extend({
      */
     startDownloadTool: function () {
         this.model.startDownloadTool();
+    },
+
+    /**
+     * deletes the last added geometry from the layer
+     * @return {void}
+     */
+    undoLastStep: function () {
+        this.model.undoLastStep();
     },
 
     /**
