@@ -165,12 +165,12 @@ const DrawToolView = Backbone.View.extend({
         
         if (selectedElement.value.includes("free")) {
             this.model.setFreehand(true);
-            selectedElement.value = selectedElement.value.split(" ")[0];
+            this.model.setDrawType("LineString", selectedElement.text);
         } else {
             this.model.setFreehand(false);
+            this.model.setDrawType(selectedElement.value, selectedElement.text);
         }
         
-        this.model.setDrawType(selectedElement.value, selectedElement.text);
         this.model.updateDrawInteraction();
         this.renewSurface();
         this.startDrawInteraction();
