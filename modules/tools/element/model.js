@@ -1,4 +1,4 @@
-import {Circle, Fill, Stroke, Style, Text, Icon} from "ol/style.js";
+import {Circle, Fill, Stroke, Style, Icon} from "ol/style.js";
 import Tool from "../../core/modelList/tool/model";
 import Feature from "ol/Feature";
 import {Point} from "ol/geom";
@@ -11,7 +11,7 @@ const ElementTool = Tool.extend({
     defaults: _.extend({}, Tool.prototype.defautls, {
         // ol.interaction.Draw
         drawInteraction: undefined,
-        //ol.interaction.Snap
+        // ol.interaction.Snap
         snapInteraction: undefined,
         // ol.interaction.Select for the deleted features
         selectInteraction: undefined,
@@ -114,16 +114,14 @@ const ElementTool = Tool.extend({
      * Erzeugt eine neue RotateFeatureInteraction und
      * setzt die beiden Variablen auf diese Interactions
      * @param {ol.layer.Vector} layer - für die selektierten Features
+     * @returns {void}
      */
     createRotateInteraction: function (layer) {
-        var select;
-
-        select = new Select({
+        var select = new Select({
             layers: [layer],
             condition: pointerMove
-        });
-
-        var rotate = new RotateFeatureInteraction({
+        }),
+            rotate = new RotateFeatureInteraction({
             features: select.getFeatures(),
             anchor: [0, 0],
             angle: -90 * Math.PI / 180
@@ -141,15 +139,17 @@ const ElementTool = Tool.extend({
      * jeweiligen features und fuegt diesen der Map hinzu
      * @param {*} evt - Das ausgewählte Feature
      * @param {ol.layer.Vector} layer - für die selektierten Features
+     * @returns {void}
      */
     replaceElement: function (evt, layer) {
-        var layers = Radio.request("Map", "getLayers");
-        var button = this.get("button");
-        var drawType = this.get("drawType");
-        var point = new Feature({
+        var layers = Radio.request("Map", "getLayers"),
+            button = this.get("button"),
+            drawType = this.get("drawType"),
+            point = new Feature({
             geometry: new Point(evt.anchor)
             // unterscheidung zum downloaden
         });
+
         point.setStyle(this.getDrawStyle(drawType.text, button, -1 * evt.angle, evt.features_.item(0).getStyle().getImage().getSrc()));
         layer.getSource().addFeature(point);
         layer.getSource().removeFeature(evt.features_.item(0));
@@ -185,10 +185,11 @@ const ElementTool = Tool.extend({
      * Erstelle dann ein neues Feature auf der Map
      * @param {*} drawType - Der Drawtyp für die neue Drawinteraction
      * @param {ol.layer.Vector} - für die selektierten Features
+     * @returns {void}
      */
     createDrawInteraction: function (drawType, layer) {
-        var that = this;
-        var freehand = this.get("freehand") === "Freihand";
+        var that = this,
+            freehand = this.get("freehand") === "Freihand";
         Radio.trigger("Map", "removeInteraction", this.get("drawInteraction"));
         this.set("drawInteraction", new Draw({
             source: layer.getSource(),
@@ -204,6 +205,7 @@ const ElementTool = Tool.extend({
             evt.feature.setStyle(that.getStyle(drawType.text));
         }, this);
         Radio.trigger("Map", "addInteraction", this.get("drawInteraction"));
+
         if (drawType.geometry === "LineString") {
             this.addSnapInteraction(layer);
         }
@@ -273,10 +275,11 @@ const ElementTool = Tool.extend({
      * @return {ol.style.Style} style
      */
     getDrawStyle: function (text, button, rotation, source) {
-        var laenge = this.get("width");
-        var breite = this.get("broad");
-        var offset = [25, 25];
-        var src;
+        var laenge = this.get("width"),
+            breite = this.get("broad"),
+            offset = [25, 25],
+            src;
+
         if (button === "d") {
             laenge = 524;
             breite = 524;
@@ -288,8 +291,8 @@ const ElementTool = Tool.extend({
         else {
             src = source;
         }
-        return new Style({
 
+        return new Style({
             image:
                 new Icon({
                     anchor: [0.5, 0.5],
@@ -319,6 +322,7 @@ const ElementTool = Tool.extend({
      */
     determineIconImage: function (text, button) {
         var s;
+
         if (text === "Element setzen") {
             switch (button) {
                 case "a":
@@ -435,6 +439,7 @@ const ElementTool = Tool.extend({
     /**
      * Hauptmethode um zu entscheiden, welche Interaction aktiviert/deaktiviert werden muss
      * @param {*} value - Die jeweilige Interaktion
+     * @returns {void}
      */
     toggleInteraction: function (value) {
         if (value.hasClass("modify")) {
@@ -455,6 +460,7 @@ const ElementTool = Tool.extend({
     /**
      * Aktiviert/Deaktiviert das Verschieben von Features
      * @param {boolean} value - Entscheidung, ob Interaktion aktiviert oder deaktiviert werden soll
+     * @returns {void}
      */
     toggletranslateInteraction: function (value) {
         if (value) {
@@ -472,6 +478,7 @@ const ElementTool = Tool.extend({
     /**
      * Aktiviert/Deaktiviert das Modifizieren von Features
      * @param {boolean} value - Entscheidung, ob Interaktion aktiviert oder deaktiviert werden soll
+     * @returns {void}
      */ 
     toggleModifyInteraction: function (value) {
         if (value) {
@@ -488,6 +495,7 @@ const ElementTool = Tool.extend({
     /**
      * Aktiviert/Deaktiviert das Rotieren von Features
      * @param {boolean} value - Entscheidung, ob Interaktion aktiviert oder deaktiviert werden soll
+     * @returns {void}
      */
     toggleRotateInteraction: function (value) {
         if (value) {
@@ -504,6 +512,7 @@ const ElementTool = Tool.extend({
     /** 
      *  Aktiviert/Deaktiviert ol.interaction.select. Auf Click wird das Feature gelöscht.
      * @param {boolean} value - Entscheidung, ob Interaktion aktiviert oder deaktiviert werden soll
+     * @returns {void}
      */
     toggleSelectInteraction: function (value) {
         if (value) {

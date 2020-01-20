@@ -312,7 +312,6 @@ const ModelList = Backbone.Collection.extend(/** @lends ModelList.prototype */{
              * layerslider
              * @deprecated in 3.0.0
              */
-             
             else if (attrs.id === "layerslider") {
                 console.warn("Tool: 'layerslider' is deprecated. Please use 'layerSlider' instead.");
                 return new LayerSliderModel(attrs, options);

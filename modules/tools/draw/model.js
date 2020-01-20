@@ -739,10 +739,11 @@ const DrawTool = Tool.extend({
      * @returns {void}
      */
     undoLastStep: function () {
-    var features = this.get("layer").getSource().getFeatures();
-    var featureToRemove = features[features.length-1];
-        if(features.length > 0) {
-            this.get("layer").getSource().removeFeature(featureToRemove)
+        var features = this.get("layer").getSource().getFeatures(),
+            featureToRemove = features[features.length - 1];
+
+        if (features.length > 0) {
+            this.get("layer").getSource().removeFeature(featureToRemove);
         }
     },
 
