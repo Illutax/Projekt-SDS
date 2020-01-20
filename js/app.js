@@ -51,7 +51,6 @@ import TreeFilterView from "../modules/treefilter/view";
 import Formular from "../modules/formular/view";
 import FeatureLister from "../modules/featurelister/view";
 import PrintView from "../modules/tools/print_/view";
-import ElementView from "../modules/tools/element/view";
 // @deprecated in version 3.0.0
 // remove "version" in doc and config.
 // rename "print_" to "print"
@@ -205,10 +204,6 @@ function loadApp () {
             }
             case "draw": {
                 new DrawView({model: tool});
-                break;
-            }
-            case "element": {
-                new ElementView({model: tool});
                 break;
             }
             case "print": {
