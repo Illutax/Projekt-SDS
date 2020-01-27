@@ -750,12 +750,13 @@ const DrawTool = Tool.extend({
      * @returns {void}
      */
     undoLastStep: function () {
-        var features = this.get("layer").getSource().getFeatures();
-        var featureToRemove = features[features.length-1];
-            if(features.length > 0) {
-                this.updateRedoArray(featureToRemove, false);
-                this.get("layer").getSource().removeFeature(featureToRemove);
-            }
+        const features = this.get("layer").getSource().getFeatures(),
+            featureToRemove = features[features.length - 1];
+
+        if (features.length > 0) {
+            this.updateRedoArray(featureToRemove, false);
+            this.get("layer").getSource().removeFeature(featureToRemove);
+        }
     },
 
     /*
@@ -763,8 +764,9 @@ const DrawTool = Tool.extend({
      * @returns {void}
      */
     redoLastStep: function () {
-        var redoArray = this.get("redoArray");
-        var featureToRestore = redoArray[redoArray.length-1];
+        const redoArray = this.get("redoArray"),
+            featureToRestore = redoArray[redoArray.length - 1];
+
         this.get("layer").getSource().addFeature(featureToRestore);
         this.updateRedoArray(undefined, true);
     },
@@ -773,11 +775,12 @@ const DrawTool = Tool.extend({
      * adds or removes one element from the redoArray
      * @param {object} feature - feature to be added to the array
      * @param {boolean} remove - if true: remove one object
-     * @return
+     * @return {void}
      */
-    updateRedoArray: function(feature, remove) {
-        var redoArray = this.get("redoArray");
-        if(remove == true) {
+    updateRedoArray: function (feature, remove) {
+        const redoArray = this.get("redoArray");
+
+        if (remove) {
             redoArray.pop();
         }
         else {
@@ -837,7 +840,7 @@ const DrawTool = Tool.extend({
      * @param {array} value - new redoArray
      * @return {void}
      */
-    setRedoArray(value) {
+    setRedoArray (value) {
         this.set("redoArray", value);
     },
 

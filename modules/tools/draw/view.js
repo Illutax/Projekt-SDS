@@ -13,10 +13,12 @@ const DrawToolView = Backbone.View.extend({
         "change .color select": "setColor",
         "click .delete": "deleteFeatures",
         "click .draw": "toggleInteraction",
-        "click .move": "toggleInteraction",
+        "click .move": e => {
+            this.toggleInteraction(e);
+            this.enableMoving(e);
+        },
         "click .modify": "toggleInteraction",
         "click .trash": "toggleInteraction",
-        "click .move": "enableMoving",
         "click .downloadDrawing": "startDownloadTool",
         "click .undo": "undoLastStep",
         "click .redo": "redoLastStep"
