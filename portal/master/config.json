@@ -275,10 +275,6 @@
                  "name":"Vergleichsliste",
                  "glyphicon":"glyphicon-th-list"
               },
-              "element": {
-                "name": "Element platzieren",
-                "glyphicon": "glyphicon-briefcase"
-              },
               "parcelSearch":{
                  "name":"Flurstückssuche",
                  "glyphicon":"glyphicon-search",
