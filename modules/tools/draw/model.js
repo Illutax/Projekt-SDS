@@ -30,7 +30,8 @@ const DrawTool = Tool.extend({
         glyphicon: "glyphicon-pencil",
         addFeatureListener: {},
         zIndex: 0,
-        freehand: true
+        freehand: true,
+        redoArray: []
     }),
 
     /**
@@ -719,6 +720,16 @@ const DrawTool = Tool.extend({
     },
 
     /**
+     * enables moving the map by deativating any active interactions
+     * @return {void}
+     */
+    enableMoving: function () {
+        this.deactivateDrawInteraction();
+        this.deactivateModifyInteraction();
+        this.deactivateSelectInteraction();
+    },
+
+    /**
      * Starts the download tool
      * @returns {void}
      */
@@ -739,11 +750,40 @@ const DrawTool = Tool.extend({
      * @returns {void}
      */
     undoLastStep: function () {
-    var features = this.get("layer").getSource().getFeatures();
-    var featureToRemove = features[features.length-1];
-        if(features.length > 0) {
-            this.get("layer").getSource().removeFeature(featureToRemove)
+        var features = this.get("layer").getSource().getFeatures();
+        var featureToRemove = features[features.length-1];
+            if(features.length > 0) {
+                this.updateRedoArray(featureToRemove, false);
+                this.get("layer").getSource().removeFeature(featureToRemove);
+            }
+    },
+
+    /*
+     * restores the last deleted element to the feature array in "layer"
+     * @returns {void}
+     */
+    redoLastStep: function () {
+        var redoArray = this.get("redoArray");
+        var featureToRestore = redoArray[redoArray.length-1];
+        this.get("layer").getSource().addFeature(featureToRestore);
+        this.updateRedoArray(undefined, true);
+    },
+
+    /**
+     * adds or removes one element from the redoArray
+     * @param {object} feature - feature to be added to the array
+     * @param {boolean} remove - if true: remove one object
+     * @return
+     */
+    updateRedoArray: function(feature, remove) {
+        var redoArray = this.get("redoArray");
+        if(remove == true) {
+            redoArray.pop();
         }
+        else {
+            redoArray.push(feature);
+        }
+        this.setRedoArray(redoArray);
     },
 
     /**
@@ -790,6 +830,15 @@ const DrawTool = Tool.extend({
      */
     setFreehand: function (value) {
         this.set("freehand", value);
+    },
+
+    /**
+     * setter for redoArray
+     * @param {array} value - new redoArray
+     * @return {void}
+     */
+    setRedoArray(value) {
+        this.set("redoArray", value);
     },
 
     /**

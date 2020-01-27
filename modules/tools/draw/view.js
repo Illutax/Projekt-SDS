@@ -13,10 +13,13 @@ const DrawToolView = Backbone.View.extend({
         "change .color select": "setColor",
         "click .delete": "deleteFeatures",
         "click .draw": "toggleInteraction",
+        "click .move": "toggleInteraction",
         "click .modify": "toggleInteraction",
         "click .trash": "toggleInteraction",
+        "click .move": "enableMoving",
         "click .downloadDrawing": "startDownloadTool",
-        "click .undo": "undoLastStep"
+        "click .undo": "undoLastStep",
+        "click .redo": "redoLastStep"
     },
 
     /**
@@ -200,6 +203,18 @@ const DrawToolView = Backbone.View.extend({
     },
 
     /**
+     * enable moving the map with multitouch or mouse gestures
+     * @param {event} evt - with the interactions
+     * @return {void}
+     */
+    enableMoving: function (evt) {
+        this.unsetAllSelected();
+        $(evt.target).toggleClass("btn-primary");
+        $(evt.target).toggleClass("btn-lgv-grey");
+        this.model.enableMoving();
+    },
+
+    /**
      * deselects all buttons
      * @return {void}
      */
@@ -232,6 +247,14 @@ const DrawToolView = Backbone.View.extend({
      */
     undoLastStep: function () {
         this.model.undoLastStep();
+    },
+
+    /**
+     * restores the last deleted geometry
+     * @return {void}
+     */
+    redoLastStep: function () {
+        this.model.redoLastStep();
     },
 
     /**
