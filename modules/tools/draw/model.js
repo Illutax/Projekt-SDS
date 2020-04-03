@@ -31,7 +31,8 @@ const DrawTool = Tool.extend({
         addFeatureListener: {},
         zIndex: 0,
         freehand: true,
-        redoArray: []
+        redoArray: [],
+        fId: 0
     }),
 
     /**
@@ -764,10 +765,15 @@ const DrawTool = Tool.extend({
      * @returns {void}
      */
     redoLastStep: function () {
-        const redoArray = this.get("redoArray"),
+        const redoArray = this.get("redoArray");
+        const featureId = this.get("fId"),
             featureToRestore = redoArray[redoArray.length - 1];
+            const featureStyle = featureToRestore.getStyle();
 
+        featureToRestore.setId(featureId);
+        this.countupFId();
         this.get("layer").getSource().addFeature(featureToRestore);
+        this.get("layer").getSource().getFeatureById(featureId).setStyle(featureStyle);
         this.updateRedoArray(undefined, true);
     },
 
@@ -942,6 +948,25 @@ const DrawTool = Tool.extend({
     */
     setZIndex: function (value) {
         this.set("zIndex", value);
+    },
+
+    /*
+    * count up fId
+    * @returns {void}
+    */
+    countupFId: function () {
+        var value = this.get("fId") + 1;
+
+        this.setFId(value);
+    },
+
+    /*
+    * setter for fId
+    * @param {number} value fId
+    * @returns {void}
+    */
+    setFId: function (value) {
+        this.set("fId", value);
     }
 });
 
